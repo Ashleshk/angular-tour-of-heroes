@@ -15,13 +15,13 @@ export class HeroesComponent implements OnInit {
   //   name: 'Windstorm'
   // };
   heroes: Hero[];
-  selectedHero: Hero;
+  //selectedHero: Hero;
 
-  onSelect(hero: Hero): void {
-    this.selectedHero = hero;
-    //after message service is injected
-    this.messageService.add(`HeroesComponent: Selected hero id=${hero.id}`);
-  }
+  // onSelect(hero: Hero): void {
+  //   //this.selectedHero = hero;
+  //   //after message service is injected
+  //   this.messageService.add(`HeroesComponent: Selected hero id=${hero.id}`);
+  // }
 
   getHeroes(): void {
    //* this.heroes = this.heroService.getHeroes();  //OLD
@@ -60,7 +60,7 @@ export class HeroesComponent implements OnInit {
   // requests heroes from the server.
 }
 
-  constructor(private heroService: HeroService, private messageService: MessageService ) { 
+  constructor(private heroService: HeroService ) { 
     // The parameter simultaneously defines a private heroService 
     // property and identifies it as a HeroService injection site.
 
