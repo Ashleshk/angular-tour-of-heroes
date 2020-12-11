@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 
 import { Hero } from '../hero';
 import { HeroService } from '../hero.service';
-import { MessageService } from '../message.service';
+// import { MessageService } from '../message.service';
 
 @Component({
   selector: 'app-heroes',
@@ -17,12 +17,25 @@ export class HeroesComponent implements OnInit {
   heroes: Hero[];
   //selectedHero: Hero;
 
+  
+  constructor(private heroService: HeroService ) { 
+    // The parameter simultaneously defines a private heroService 
+    // property and identifies it as a HeroService injection site.
+
+    // When Angular creates a HeroesComponent, the Dependency Injection
+    //  system sets the heroService parameter to the singleton instance 
+    //  of HeroService.
+  }
+
   // onSelect(hero: Hero): void {
   //   //this.selectedHero = hero;
   //   //after message service is injected
   //   this.messageService.add(`HeroesComponent: Selected hero id=${hero.id}`);
   // }
 
+  ngOnInit(){
+    this.getHeroes();
+  }
   getHeroes(): void {
    //* this.heroes = this.heroService.getHeroes();  //OLD
 
@@ -48,10 +61,11 @@ export class HeroesComponent implements OnInit {
   //   Observable.
 
 
-  //Applyting ABOVE
-  this.heroService.getHeroes().subscribe(heroes =>this.heroes =heroes);
+  //Applyting ABOVE  --just to accept observable<Hero[]> realtime serverlike scenerio
+  this.heroService.getHeroes()
+        .subscribe(heroes =>this.heroes =heroes);
   
-  // The new version waits for the Observable to emit the array of 
+  // This version waits for the Observable to emit the array of 
   // heroes—which could happen now or several minutes from now. The 
   // subscribe() method passes the emitted array to the callback, which
   //  sets the component's heroes property.
@@ -60,17 +74,18 @@ export class HeroesComponent implements OnInit {
   // requests heroes from the server.
 }
 
-  constructor(private heroService: HeroService ) { 
-    // The parameter simultaneously defines a private heroService 
-    // property and identifies it as a HeroService injection site.
-
-    // When Angular creates a HeroesComponent, the Dependency Injection
-    //  system sets the heroService parameter to the singleton instance 
-    //  of HeroService.
+  add(name: string): void {
+    name = name.trim();
+    if (!name) { return; }
+    this.heroService.addHero({ name } as Hero)
+      .subscribe(hero => {
+        this.heroes.push(hero);
+      });
   }
 
-  ngOnInit(){
-    this.getHeroes();
+  delete(hero: Hero): void {
+    this.heroes = this.heroes.filter(h => h !== hero);
+    this.heroService.deleteHero(hero).subscribe();
   }
-
+ 
 }
